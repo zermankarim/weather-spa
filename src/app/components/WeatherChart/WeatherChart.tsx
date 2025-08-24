@@ -1,34 +1,31 @@
 'use client';
 
+import React, { useState } from 'react';
 import {
-  LineChart,
-  Line,
+  Box,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup,
+  CircularProgress,
+  Paper,
+  useTheme,
+  alpha,
+  Chip,
+} from '@mui/material';
+import {
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  DotProps,
-  Area,
-  AreaChart,
 } from 'recharts';
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  useTheme,
-  alpha,
-  Paper,
-  Chip,
-  ToggleButton,
-  ToggleButtonGroup,
-} from '@mui/material';
 import {
   ThermostatOutlined as TempIcon,
   WaterDrop as HumidityIcon,
   Air as WindIcon,
 } from '@mui/icons-material';
-import { useState } from 'react';
 import { HourlyWeatherData } from '@/app/types/weather';
 
 interface WeatherChartProps {
@@ -200,7 +197,7 @@ export default function WeatherChart({ data, isLoading }: WeatherChartProps) {
     return null;
   };
 
-  const CustomDot = (props: DotProps & { payload?: ChartData }) => {
+  const CustomDot = (props: { cx?: number; cy?: number; payload?: ChartData }) => {
     const { cx, cy, payload } = props;
 
     if (!cx || !cy || !payload) return null;

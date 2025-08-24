@@ -14,17 +14,14 @@ import {
   Paper,
   Skeleton,
   Alert,
-  Divider,
   useTheme,
   alpha,
   Tooltip,
   Fade,
   useMediaQuery,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import {
   ArrowBack as ArrowBackIcon,
-  Thermostat as ThermostatIcon,
   Water as WaterIcon,
   Air as AirIcon,
   Compress as CompressIcon,
@@ -114,9 +111,9 @@ export default function CityDetailPage() {
               mb: 2,
             }}
           />
-          <Typography 
-            variant={isMobile ? "h6" : "h5"} 
-            color="error" 
+          <Typography
+            variant={isMobile ? "h6" : "h5"}
+            color="error"
             gutterBottom
           >
             🏙️ Місто не знайдено
@@ -203,18 +200,18 @@ export default function CityDetailPage() {
           <Box flex={1}>
             <Box display="flex" alignItems="center" gap={1} mb={1}>
               <LocationIcon color="primary" />
-              <Typography 
-                variant={isMobile ? "h4" : "h3"} 
-                component="h1" 
+              <Typography
+                variant={isMobile ? "h4" : "h3"}
+                component="h1"
                 fontWeight={600}
                 sx={{ wordBreak: 'break-word' }}
               >
                 {city.name}
               </Typography>
             </Box>
-            <Box 
-              display="flex" 
-              alignItems="center" 
+            <Box
+              display="flex"
+              alignItems="center"
               gap={2}
               flexDirection={isMobile ? 'column' : 'row'}
               alignSelf={isMobile ? 'flex-start' : 'center'}
@@ -244,30 +241,23 @@ export default function CityDetailPage() {
               '&:hover': {
                 bgcolor: alpha(theme.palette.success.main, 0.2),
               },
-              alignSelf: isMobile ? 'flex-end' : 'auto',
             }}
+            size={isMobile ? "medium" : "large"}
           >
-            <RefreshIcon
-              sx={{
-                animation: isRefreshing ? 'spin 1s linear infinite' : 'none',
-                '@keyframes spin': {
-                  '0%': { transform: 'rotate(0deg)' },
-                  '100%': { transform: 'rotate(360deg)' },
-                },
-              }}
-            />
+            <RefreshIcon />
           </IconButton>
         </Tooltip>
       </Box>
 
-      {/* Помилки */}
+      {/* Показуємо помилки */}
       {(weatherError || forecastError) && (
-        <Fade in>
+        <Fade in timeout={500}>
           <Alert
-            severity="warning"
-            sx={{ mb: { xs: 2, sm: 3, md: 4 }, borderRadius: 2 }}
+            severity="error"
+            sx={{ mb: { xs: 2, sm: 3, md: 4 } }}
             action={
               <Button
+                color="inherit"
                 size="small"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
@@ -276,16 +266,22 @@ export default function CityDetailPage() {
               </Button>
             }
           >
-            ⚠️ Не вдалося завантажити актуальні дані про погоду. Показуємо
-            збережені дані.
+            Помилка завантаження даних. Перевірте підключення до інтернету або спробуйте оновити сторінку.
+            {weatherData && (
+              <Box mt={1}>
+                <Typography variant="body2">
+                  Показуємо останні збережені дані.
+                </Typography>
+              </Box>
+            )}
           </Alert>
         </Fade>
       )}
 
       {weather && (
-        <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+        <Box display="flex" flexDirection="column" gap={{ xs: 2, sm: 3, md: 4 }}>
           {/* Основна інформація про погоду */}
-          <Grid xs={12} md={8}>
+          <Box flex={1}>
             <Card
               elevation={6}
               sx={{
@@ -378,39 +374,32 @@ export default function CityDetailPage() {
                         <span
                           style={{
                             color: getTemperatureColor(weather.main.feels_like),
+                            fontWeight: 600,
                           }}
                         >
-                          {Math.round(weather.main.feels_like)}°C
+                          {Math.round(weather.main.feels_like)}°
                         </span>
                       </Typography>
 
+                      {/* Додаткові параметри */}
                       <Box
                         display="flex"
-                        gap={{ xs: 1, sm: 2 }}
                         flexWrap="wrap"
                         justifyContent="center"
+                        gap={{ xs: 1, sm: 2, md: 3 }}
+                        sx={{ width: '100%' }}
                       >
                         <Chip
-                          icon={<MinTempIcon />}
-                          label={`Мін: ${Math.round(weather.main.temp_min)}°C`}
-                          variant="filled"
-                          color="primary"
+                          icon={<MaxTempIcon />}
+                          label={`Макс: ${Math.round(weather.main.temp_max)}°`}
+                          variant="outlined"
                           size={isMobile ? "small" : "medium"}
-                          sx={{
-                            fontWeight: 600,
-                            '& .MuiChip-icon': { color: 'inherit' },
-                          }}
                         />
                         <Chip
-                          icon={<MaxTempIcon />}
-                          label={`Макс: ${Math.round(weather.main.temp_max)}°C`}
-                          variant="filled"
-                          color="error"
+                          icon={<MinTempIcon />}
+                          label={`Мін: ${Math.round(weather.main.temp_min)}°`}
+                          variant="outlined"
                           size={isMobile ? "small" : "medium"}
-                          sx={{
-                            fontWeight: 600,
-                            '& .MuiChip-icon': { color: 'inherit' },
-                          }}
                         />
                       </Box>
                     </Box>
@@ -418,12 +407,12 @@ export default function CityDetailPage() {
                 )}
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
           {/* Додаткова інформація */}
-          <Grid xs={12} md={4}>
-            <Grid container spacing={{ xs: 1, sm: 2 }}>
-              <Grid xs={6} md={12}>
+          <Box flex={1}>
+            <Box display="flex" flexDirection="column" gap={{ xs: 1, sm: 2 }}>
+              <Box>
                 <Paper
                   elevation={3}
                   sx={{
@@ -448,9 +437,9 @@ export default function CityDetailPage() {
                     </Box>
                   </Box>
                 </Paper>
-              </Grid>
+              </Box>
 
-              <Grid xs={6} md={12}>
+              <Box>
                 <Paper
                   elevation={3}
                   sx={{
@@ -478,9 +467,9 @@ export default function CityDetailPage() {
                     </Box>
                   </Box>
                 </Paper>
-              </Grid>
+              </Box>
 
-              <Grid xs={6} md={12}>
+              <Box>
                 <Paper
                   elevation={3}
                   sx={{
@@ -508,9 +497,9 @@ export default function CityDetailPage() {
                     </Box>
                   </Box>
                 </Paper>
-              </Grid>
+              </Box>
 
-              <Grid xs={6} md={12}>
+              <Box>
                 <Paper
                   elevation={3}
                   sx={{
@@ -524,122 +513,78 @@ export default function CityDetailPage() {
                   }}
                 >
                   <Box display="flex" alignItems="center" gap={1.5} mb={1}>
-                    <VisibilityIcon color="secondary" fontSize={isMobile ? "medium" : "large"} />
+                    <VisibilityIcon color="info" fontSize={isMobile ? "medium" : "large"} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Видимість
                       </Typography>
                       <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold">
-                        {weather.visibility
-                          ? `${(weather.visibility / 1000).toFixed(1)} км`
-                          : 'Н/Д'}
+                        {weather.visibility ? `${Math.round(weather.visibility / 1000)} км` : 'Н/Д'}
                       </Typography>
                     </Box>
                   </Box>
                 </Paper>
-              </Grid>
-            </Grid>
-          </Grid>
+              </Box>
+            </Box>
+          </Box>
 
-          {/* Час сходу і заходу сонця */}
-          {weather.sys && (
-            <Grid xs={12}>
-              <Paper
-                elevation={4}
-                sx={{
-                  p: { xs: 2, sm: 3, md: 4 },
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
-                }}
-              >
-                <Typography
-                  variant={isMobile ? "h6" : "h5"}
-                  gutterBottom
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}
-                >
-                  ☀️ Сонячна активність
+          {/* Сонячні години */}
+          <Box>
+            <Paper
+              elevation={3}
+              sx={{
+                p: { xs: 2, sm: 3, md: 4 },
+                background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
+              }}
+            >
+              <Box display="flex" alignItems="center" gap={2} mb={2}>
+                <SunIcon color="warning" fontSize={isMobile ? "medium" : "large"} />
+                <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold">
+                  Сонячні години
                 </Typography>
-                <Divider sx={{ mb: 3 }} />
-                <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
-                  <Grid xs={12} sm={6}>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Box
-                        sx={{
-                          p: { xs: 1.5, sm: 2 },
-                          borderRadius: '50%',
-                          bgcolor: alpha(theme.palette.warning.main, 0.1),
-                        }}
-                      >
-                        <SunIcon color="warning" fontSize={isMobile ? "medium" : "large"} />
-                      </Box>
-                      <Box>
-                        <Typography
-                          variant="body1"
-                          color="text.secondary"
-                          gutterBottom
-                        >
-                          🌅 Схід сонця
-                        </Typography>
-                        <Typography variant={isMobile ? "h5" : "h4"} fontWeight="bold">
-                          {formatUnixTime(weather.sys.sunrise)}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid xs={12} sm={6}>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Box
-                        sx={{
-                          p: { xs: 1.5, sm: 2 },
-                          borderRadius: '50%',
-                          bgcolor: alpha(theme.palette.grey[600], 0.1),
-                        }}
-                      >
-                        <SunIcon
-                          sx={{ color: theme.palette.grey[600] }}
-                          fontSize={isMobile ? "medium" : "large"}
-                        />
-                      </Box>
-                      <Box>
-                        <Typography
-                          variant="body1"
-                          color="text.secondary"
-                          gutterBottom
-                        >
-                          🌇 Захід сонця
-                        </Typography>
-                        <Typography variant={isMobile ? "h5" : "h4"} fontWeight="bold">
-                          {formatUnixTime(weather.sys.sunset)}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-          )}
-
-          {/* Графік погоди по годинах */}
-          {(forecastData || isForecastLoading) && (
-            <Grid xs={12}>
-              <Card elevation={6} sx={{ overflow: 'hidden' }}>
-                <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
-                  <Typography
-                    variant={isMobile ? "h6" : "h5"}
-                    gutterBottom
-                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                  >
-                    📊 Погодинний прогноз
+              </Box>
+              <Box display="flex" flexDirection="column" gap={2}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Typography variant="body2" color="text.secondary">
+                    🌅 Схід:
                   </Typography>
-                  <Divider sx={{ mb: 3 }} />
-                  <WeatherChart
-                    data={forecastData?.list || []}
-                    isLoading={isForecastLoading}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          )}
-        </Grid>
+                  <Typography variant="body1" fontWeight="medium">
+                    {formatUnixTime(weather.sys.sunrise)}
+                  </Typography>
+                </Box>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Typography variant="body2" color="text.secondary">
+                    🌇 Захід:
+                  </Typography>
+                  <Typography variant="body1" fontWeight="medium">
+                    {formatUnixTime(weather.sys.sunset)}
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+
+          {/* Графік прогнозу */}
+          <Box>
+            <Paper
+              elevation={3}
+              sx={{
+                p: { xs: 2, sm: 3, md: 4 },
+                background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
+              }}
+            >
+              <Box display="flex" alignItems="center" gap={2} mb={3}>
+                <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold">
+                  📊 Прогноз погоди на 24 години
+                </Typography>
+              </Box>
+              <WeatherChart
+                data={forecastData?.list || []}
+                isLoading={isForecastLoading}
+              />
+            </Paper>
+          </Box>
+        </Box>
       )}
     </Container>
   );

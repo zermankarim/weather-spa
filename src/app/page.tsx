@@ -11,7 +11,7 @@ import {
   Alert,
   Button,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
+
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { addCity } from './store/slices/citiesSlice';
@@ -80,13 +80,13 @@ export default function HomePage() {
           </Typography>
         </Box>
       ) : (
-        <Grid container spacing={3}>
+        <Box display="flex" flexWrap="wrap" gap={3}>
           {cities.map(city => (
-            <Grid item xs={12} sm={6} md={4} key={city.id}>
+            <Box key={city.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.333% - 16px)' } }}>
               <CityCard city={city} />
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       )}
 
       <Fab

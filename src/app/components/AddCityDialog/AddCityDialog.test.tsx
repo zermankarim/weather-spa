@@ -1,16 +1,13 @@
-// Mock the weather API hook
-jest.mock('@/app/store/api/weatherApi', () => ({
-  useGetWeatherByCityQuery: jest.fn(),
-}));
-
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from '@/app/utils/test.utils';
 import AddCityDialog from './AddCityDialog';
 
-const mockUseGetWeatherByCityQuery = jest.mocked(
-  require('@/app/store/api/weatherApi').useGetWeatherByCityQuery
-);
+// Mock the weather API hook
+const mockUseGetWeatherByCityQuery = jest.fn();
+jest.mock('@/app/store/api/weatherApi', () => ({
+  useGetWeatherByCityQuery: mockUseGetWeatherByCityQuery,
+}));
 
 describe('AddCityDialog Component', () => {
   const mockOnClose = jest.fn();

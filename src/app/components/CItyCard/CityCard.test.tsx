@@ -14,8 +14,9 @@ jest.mock('./CityCard.module.scss', () => ({
 }));
 
 // Mock the weather API hook
+const mockUseGetWeatherByCoordsQuery = jest.fn();
 jest.mock('@/app/store/api/weatherApi', () => ({
-  useGetWeatherByCoordsQuery: jest.fn(),
+  useGetWeatherByCoordsQuery: mockUseGetWeatherByCoordsQuery,
 }));
 
 import React from 'react';
@@ -29,10 +30,7 @@ import { City } from '@/app/types/weather';
 import { renderWithProviders, createMockStore } from '@/app/utils/test.utils';
 import CityCard from './CityCard';
 
-// Get the mocked functions
-const mockUseGetWeatherByCoordsQuery = jest.mocked(
-  require('@/app/store/api/weatherApi').useGetWeatherByCoordsQuery
-);
+
 
 describe('CityCard Component', () => {
   const mockCity: City = {
@@ -212,14 +210,13 @@ describe('CityCard Component', () => {
 
     it('removes city when delete button is clicked', () => {
       const store = createMockStore();
-      const spy = jest.spyOn(store, 'dispatch');
 
       renderWithProviders(<CityCard city={mockCity} />, { store });
 
       const deleteButton = screen.getByLabelText('Видалити місто');
       fireEvent.click(deleteButton);
 
-      expect(spy).toHaveBeenCalledWith(
+      expect(store.dispatch).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'cities/removeCity',
           payload: '1',
@@ -232,7 +229,6 @@ describe('CityCard Component', () => {
         .fn()
         .mockResolvedValue({ data: mockWeatherData });
       const store = createMockStore();
-      const spy = jest.spyOn(store, 'dispatch');
 
       mockUseGetWeatherByCoordsQuery.mockReturnValue({
         data: mockWeatherData,
@@ -367,7 +363,6 @@ describe('CityCard Component', () => {
 
       const deleteButton = screen.getByLabelText('Видалити місто');
       const clickEvent = new MouseEvent('click', { bubbles: true });
-      const stopPropagationSpy = jest.spyOn(clickEvent, 'stopPropagation');
 
       fireEvent(deleteButton, clickEvent);
 

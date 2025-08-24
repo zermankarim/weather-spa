@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from '@/app/utils/test.utils';
 import WeatherChart from './WeatherChart';
 import { HourlyWeatherData } from '@/app/types/weather';
